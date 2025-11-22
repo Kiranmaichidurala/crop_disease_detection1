@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plant Disease Detector</title>
+    <link rel="stylesheet" href="/static/styles.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>🌿 Plant Disease Detection System</h1>
+        <p>Upload a leaf image to detect plant health and possible diseases.</p>
+    </header>
+
+    <!-- Image Gallery Section -->
+    <section class="gallery-section">
+        <h2>Plant Health Samples</h2>
+
+        <div class="gallery-container">
+
+            <!-- Healthy Samples -->
+            <div class="gallery-block">
+                <h3>Healthy Plants</h3>
+                <div class="gallery-row">
+                    <img src="/static/sample/healthy1.jpg" alt="Healthy Plant">
+                    <img src="/static/sample/healthy2.jpg" alt="Healthy Plant">
+                    <img src="/static/sample/healthy3.jpg" alt="Healthy Plant">
+                </div>
+            </div>
+
+            <!-- Unhealthy Samples -->
+            <div class="gallery-block">
+                <h3>Disease Samples</h3>
+                <div class="gallery-row">
+                    <img src="/static/sample/disease1.jpg" alt="Disease Image">
+                    <img src="/static/sample/disease2.jpg" alt="Disease Image">
+                    <img src="/static/sample/disease3.jpg" alt="Disease Image">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <h2>Detect Your Plant's Health</h2>
+
+        <form action="/predict" method="post" enctype="multipart/form-data" class="upload-form">
+            <label class="upload-box">
+                <input type="file" name="file" accept="image/*" required>
+                <span>📸 Choose Image</span>
+            </label>
+            <button type="submit" class="predict-btn">🔍 Predict Disease</button>
+        </form>
+    </section>
+
+</body>
+</html>

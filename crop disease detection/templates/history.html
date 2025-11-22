@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My History | Crop Disease Detection</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+  <div class="container">
+    <a class="navbar-brand" href="/">🌾 Crop Disease Detection</a>
+    <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="text-success mb-4">📜 My Prediction History</h2>
+
+  {% if records %}
+    <table class="table table-bordered text-center align-middle shadow-sm">
+      <thead class="table-success">
+        <tr>
+          <th>Date & Time</th>
+          <th>Predicted Disease</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          <td>{{ r.predicted_disease }}</td>
+          <td><img src="{{ url_for('static', filename='../' + r.image_path) }}" width="100"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted">No history yet. Upload an image to get started.</p>
+  {% endif %}
+</div>
+
+</body>
+</html>
