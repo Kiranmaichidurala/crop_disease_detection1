@@ -3,19 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <title>Signup | Plant Disease Detector</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-box {
+            background: #ffffff;
+            padding: 65px;
+            width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 1s ease;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #27ae60;
+            box-shadow: 0 0 5px rgba(39,174,96,0.5);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .auth-btn:hover {
+            background: #219150;
+            transform: scale(1.02);
+        }
+
+        p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #27ae60;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
-<body class="auth-body">
+<body>
     <div class="auth-box">
-        <h2>Create Account</h2>
+        <h2>🌿 Create Account</h2>
 
         <form action="/login" method="get">
-            <input type="text" placeholder="Full Name" required>
-            <input type="email" placeholder="Email Address" required>
-            <input type="password" placeholder="Create Password" required>
+            <div class="input-group">
+                <input type="text" placeholder="Full Name" required>
+            </div>
+            <div class="input-group">
+                <input type="email" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Create Password" required>
+            </div>
 
-            <button class="auth-btn">Signup</button>
+            <button type="submit" class="auth-btn">Signup</button>
         </form>
 
         <p>Already have an account? <a href="/login">Login</a></p>
