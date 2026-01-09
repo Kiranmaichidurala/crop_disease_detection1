@@ -3,21 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <title>Login | Plant Disease Detector</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        /* Body and background */
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Login box */
+        .auth-box {
+            background: #ffffff;
+            padding: 85px;       /* increased from 35px */
+            width: 400px;        /* increased from 340px */
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 1s ease;
+        }
+
+        /* Header */
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        /* Input fields */
+        .input-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 40px 14px 12px; /* increased from 12px */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;               /* increased from 15px */
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #27ae60;
+            box-shadow: 0 0 5px rgba(39,174,96,0.5);
+        }
+
+        /* Show/hide password icon */
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Login button */
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .auth-btn:hover {
+            background: #219150;
+            transform: scale(1.02);
+        }
+
+        /* Sign up link */
+        p {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #27ae60;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
-<body class="auth-body">
+<body>
     <div class="auth-box">
-        <h2>Login</h2>
+        <h2>🌿 Plant Disease Detector</h2>
 
         <form action="/" method="get">
-            <input type="text" placeholder="Enter Username" required>
-            <input type="password" placeholder="Enter Password" required>
+            <div class="input-group">
+                <input type="text" placeholder="Username" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePassword()">👁️</span>
+            </div>
 
             <button type="submit" class="auth-btn">Login</button>
         </form>
 
         <p>Don't have an account? <a href="/signup">Sign up</a></p>
     </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const pwd = document.getElementById("password");
+            pwd.type = pwd.type === "password" ? "text" : "password";
+        }
+    </script>
 </body>
 </html>
