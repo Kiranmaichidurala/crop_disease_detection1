@@ -12,7 +12,7 @@
 <body>
     <header>
         <h1>🌿 Plant Disease Detection System</h1>
-        <p>Upload a leaf image to detect plant health and possible diseases.</p>
+        <p>Upload or capture a leaf image to detect plant health and possible diseases.</p>
     </header>
 
     <!-- Image Gallery Section -->
@@ -49,11 +49,25 @@
         <h2>Detect Your Plant's Health</h2>
 
         <form action="/predict" method="post" enctype="multipart/form-data" class="upload-form">
+
+            <!-- OPTION 1: Choose Image -->
             <label class="upload-box">
                 <input type="file" name="file" accept="image/*" required>
-                <span>📸 Choose Image</span>
+                <span>🖼 Choose Image from Device</span>
             </label>
+
+            <br><br>
+
+            <!-- OPTION 2: Click Image (Camera) -->
+            <label class="upload-box">
+                <input type="file" name="file" accept="image/*" capture="environment">
+                <span>📸 Click Image Using Camera</span>
+            </label>
+
+            <br><br>
+
             <button type="submit" class="predict-btn">🔍 Predict Disease</button>
+
         </form>
     </section>
 
