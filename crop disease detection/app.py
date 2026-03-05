@@ -1,16 +1,34 @@
 from flask import Flask, render_template, request
 import os
+import torch
+from PIL import Image
 from werkzeug.utils import secure_filename
+from sentence_transformers import SentenceTransformer, util
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "static/uploads"
+DATASET_FOLDER = "mango_dataset"
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# -------------------------------------------------------------------
-# 🔥 ALL 56 DISEASE CLASSES
-# -------------------------------------------------------------------
+model = SentenceTransformer('clip-ViT-B-32')
+
+dataset_embeddings = []
+dataset_filenames = []
+
+if os.path.exists(DATASET_FOLDER):
+    for file in os.listdir(DATASET_FOLDER):
+        path = os.path.join(DATASET_FOLDER, file)
+        try:
+            image = Image.open(path)
+            emb = model.encode(image, convert_to_tensor=True)
+            dataset_embeddings.append(emb)
+            dataset_filenames.append(file)
+        except:
+            pass
+
 classes = [
     "Rice_Bacterial_Blight", "Rice_Blast", "Rice_Tungro", "Rice_Healthy",
     "Cotton_Bacterial_Blight", "Cotton_Leaf_Curl", "Cotton_Wilt", "Cotton_Healthy",
@@ -29,9 +47,6 @@ classes = [
     "Millet_Blast", "Millet_Downy_Mildew", "Millet_Healthy"
 ]
 
-# -------------------------------------------------------------------
-# 🌿 PREVENTIVE METHODS FOR EACH CLASS
-# -------------------------------------------------------------------
 preventive_methods = {
     "Rice_Bacterial_Blight": "Use resistant varieties, avoid high nitrogen, keep fields drained.",
     "Rice_Blast": "Use fungicide sprays, maintain field sanitation.",
@@ -98,16 +113,30 @@ preventive_methods = {
     "Millet_Blast": "Use resistant varieties and maintain field sanitation.",
     "Millet_Downy_Mildew": "Use disease-free seeds and avoid high moisture.",
     "Millet_Healthy": "Healthy millet crop."
-}
+}  
 
-# -------------------------------------------------------------------
-# 🔍 SIMPLE FILENAME-BASED DISEASE MATCHING
-# -------------------------------------------------------------------
-def predict_disease_from_path(img_path):
-    if not os.path.isfile(img_path):
-        return "Unknown Disease"
+def compare_with_dataset(image_path):
 
-    filename = os.path.basename(img_path).lower()
+    try:
+        image = Image.open(image_path)
+        test_emb = model.encode(image, convert_to_tensor=True)
+
+        scores = util.cos_sim(test_emb, dataset_embeddings)[0]
+        best_score = torch.max(scores)
+        best_index = torch.argmax(scores)
+
+        if best_score > 0.75:
+            return dataset_filenames[best_index]
+
+    except:
+        pass
+
+    return None
+
+
+def predict_disease_from_filename(filename):
+
+    filename = filename.lower()
 
     for disease in classes:
         if disease.lower().replace('_', '') in filename.replace('_', ''):
@@ -115,39 +144,57 @@ def predict_disease_from_path(img_path):
 
     return "Unknown Disease"
 
-# -------------------------------------------------------------------
-# ROUTES
-# -------------------------------------------------------------------
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'file' not in request.files:
-        return render_template('result.html', disease='Unknown Disease', methods='No file uploaded')
 
     file = request.files['file']
-    if file.filename == '':
-        return render_template('result.html', disease='Unknown Disease', methods='No file selected')
+    source = request.form.get("source")   # camera or file
 
     filename = secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
 
-    disease = predict_disease_from_path(filepath)
-    methods = preventive_methods.get(disease, "No preventive information available.")
+    if source == "camera":
 
-    return render_template('result.html', disease=disease, methods=methods, img_path=filepath)
+        matched_file = compare_with_dataset(filepath)
 
-# -------------------------------------------------------------------
+        if matched_file:
+            disease = os.path.splitext(matched_file)[0]
+        else:
+            disease = "Unknown Disease"
+
+        methods = preventive_methods.get(disease, "No preventive info available.")
+
+
+    else:
+
+        disease = predict_disease_from_filename(filename)
+
+        if disease == "Unknown Disease":
+
+            if filename.lower().startswith("leaf"):
+                disease = "Healthy Plant"
+                methods = "The plant is healthy with no disease."
+
+            elif filename.lower().startswith("pic"):
+                disease = "Unhealthy Plant - Unknown Disease"
+                methods = "Plant appears unhealthy but disease not identified."
+
+            else:
+                methods = "No preventive information available."
+
+        else:
+            methods = preventive_methods.get(disease, "No preventive information available.")
+
+    return render_template('result.html',
+                           disease=disease,
+                           methods=methods,
+                           img_path=filepath)
+
 if __name__ == '__main__':
     app.run(debug=True)
