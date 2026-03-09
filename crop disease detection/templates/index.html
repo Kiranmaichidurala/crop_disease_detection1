@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Crop Disease Detector</title>
 
-<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet" href="static/styles.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
@@ -13,11 +13,60 @@
 
 <header>
 <h1>🌿 Crop Disease Detection System</h1>
-<p>Upload or capture a leaf image to detect Crop health and possible diseases.</p>
+<p>Upload or capture a leaf image to detect crop health and possible diseases.</p>
 </header>
 
 
+<!-- LEAF IMAGE GALLERY -->
+<section class="gallery-section">
+
+
+<div class="gallery-container">
+
+<!-- HEALTHY LEAVES -->
+<div class="gallery-block">
+
+<h3>🌱 Healthy Leaves</h3>
+
+<div class="gallery-row">
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiMH6NBBSIngpIaxRS-bqCuTXM0puCsIHW0A&s" alt="Healthy Leaf">
+
+<img src="https://img.freepik.com/free-photo/close-up-picture-gardener-s-hands-touching-lettuce-leaves_1150-26664.jpg?semt=ais_rp_50_assets&w=740&q=80" alt="Healthy Leaf">
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9GEUJIB8UduaDPWAfbK0fZnv3uKhfxVXQw&s" alt="Healthy Leaf">
+
+</div>
+
+</div>
+
+
+<!-- DISEASED LEAVES -->
+<div class="gallery-block">
+
+<h3>🍂 Diseased Leaves</h3>
+
+<div class="gallery-row">
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPjhytQMyTohX4F6WzeKQ4lTEHqzBMOLU6rQ&s" alt="Diseased Leaf">
+
+<img src="https://cdn.mos.cms.futurecdn.net/5Dsc36eupmEHu9sKfBP4HF-415-80.jpg.webp" alt="Diseased Leaf">
+
+<img src="https://cdn.mos.cms.futurecdn.net/5V9qGMtppz7cBcGEDDySg3-415-80.jpg.webp" alt="Diseased Leaf">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- UPLOAD SECTION -->
 <section class="upload-section">
+
 <h2>Detect Your Plant's Health</h2>
 
 
@@ -27,13 +76,18 @@
 <input type="hidden" name="source" value="file">
 
 <label class="upload-box">
+
 <input id="fileUpload" type="file" name="file" accept="image/*" required>
+
 <span>🖼 Choose Image from Device</span>
+
 </label>
 
 <br><br>
 
-<button type="submit">🔍 Predict Disease</button>
+<button type="submit" class="predict-btn">
+🔍 Predict Disease
+</button>
 
 </form>
 
@@ -41,22 +95,26 @@
 <br><br>
 
 
-<!-- CAMERA UPLOAD -->
+<!-- CAMERA CAPTURE -->
 <form action="/predict" method="post" enctype="multipart/form-data">
 
 <input type="hidden" name="source" value="camera">
 
 <label class="upload-box">
+
 <input id="cameraCapture" type="file" name="file" accept="image/*" capture="environment" required>
+
 <span>📸 Click Image Using Camera</span>
+
 </label>
 
 <br><br>
 
-<button type="submit">📷 Detect from Camera</button>
+<button type="submit" class="predict-btn">
+📷 Detect from Camera
+</button>
 
 </form>
-
 
 </section>
 
