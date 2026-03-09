@@ -1,75 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Plant Disease Detector</title>
-    <link rel="stylesheet" href="/static/styles.css">
+<meta charset="UTF-8">
+<title>Plant Disease Detector</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <header>
-        <h1>🌿 Plant Disease Detection System</h1>
-        <p>Upload or capture a leaf image to detect plant health and possible diseases.</p>
-    </header>
 
-    <!-- Image Gallery Section -->
-    <section class="gallery-section">
-        <h2>Plant Health Samples</h2>
+<header>
+<h1>🌿 Plant Disease Detection System</h1>
+<p>Upload or capture a leaf image to detect plant health and possible diseases.</p>
+</header>
 
-        <div class="gallery-container">
 
-            <!-- Healthy Samples -->
-            <div class="gallery-block">
-                <h3>Healthy Plants</h3>
-                <div class="gallery-row">
-                    <img src="/static/sample/healthy1.jpg" alt="Healthy Plant">
-                    <img src="/static/sample/healthy2.jpg" alt="Healthy Plant">
-                    <img src="/static/sample/healthy3.jpg" alt="Healthy Plant">
-                </div>
-            </div>
+<section class="upload-section">
+<h2>Detect Your Plant's Health</h2>
 
-            <!-- Unhealthy Samples -->
-            <div class="gallery-block">
-                <h3>Disease Samples</h3>
-                <div class="gallery-row">
-                    <img src="/static/sample/disease1.jpg" alt="Disease Image">
-                    <img src="/static/sample/disease2.jpg" alt="Disease Image">
-                    <img src="/static/sample/disease3.jpg" alt="Disease Image">
-                </div>
-            </div>
 
-        </div>
-    </section>
+<!-- DEVICE UPLOAD -->
+<form action="/predict" method="post" enctype="multipart/form-data">
 
-    <!-- Upload Section -->
-    <section class="upload-section">
-        <h2>Detect Your Plant's Health</h2>
+<input type="hidden" name="source" value="file">
 
-        <form action="/predict" method="post" enctype="multipart/form-data" class="upload-form">
+<label class="upload-box">
+<input id="fileUpload" type="file" name="file" accept="image/*" required>
+<span>🖼 Choose Image from Device</span>
+</label>
 
-            <!-- OPTION 1: Choose Image -->
-            <label class="upload-box">
-                <input type="file" name="file" accept="image/*" required>
-                <span>🖼 Choose Image from Device</span>
-            </label>
+<br><br>
 
-            <br><br>
+<button type="submit">🔍 Predict Disease</button>
 
-            <!-- OPTION 2: Click Image (Camera) -->
-            <label class="upload-box">
-                <input type="file" name="file" accept="image/*" capture="environment">
-                <span>📸 Click Image Using Camera</span>
-            </label>
+</form>
 
-            <br><br>
 
-            <button type="submit" class="predict-btn">🔍 Predict Disease</button>
+<br><br>
 
-        </form>
-    </section>
+
+<!-- CAMERA UPLOAD -->
+<form action="/predict" method="post" enctype="multipart/form-data">
+
+<input type="hidden" name="source" value="camera">
+
+<label class="upload-box">
+<input id="cameraCapture" type="file" name="file" accept="image/*" capture="environment" required>
+<span>📸 Click Image Using Camera</span>
+</label>
+
+<br><br>
+
+<button type="submit">📷 Detect from Camera</button>
+
+</form>
+
+
+</section>
 
 </body>
 </html>
