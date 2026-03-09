@@ -18,6 +18,7 @@ model = SentenceTransformer('clip-ViT-B-32')
 dataset_embeddings = []
 dataset_filenames = []
 
+# Load mango dataset images
 if os.path.exists(DATASET_FOLDER):
     for file in os.listdir(DATASET_FOLDER):
         path = os.path.join(DATASET_FOLDER, file)
@@ -29,26 +30,33 @@ if os.path.exists(DATASET_FOLDER):
         except:
             pass
 
+
 classes = [
-    "Rice_Bacterial_Blight", "Rice_Blast", "Rice_Tungro", "Rice_Healthy",
-    "Cotton_Bacterial_Blight", "Cotton_Leaf_Curl", "Cotton_Wilt", "Cotton_Healthy",
-    "Chili_Leaf_Curl", "Chili_Anthracnose", "Chili_Bacterial_Spot", "Chili_Healthy",
-    "Maize_Gray_Leaf_Spot", "Maize_Leaf_Blight", "Maize_Common_Rust", "Maize_Healthy",
-    "Groundnut_Leaf_Spot", "Groundnut_Rust", "Groundnut_Healthy",
-    "Turmeric_Leaf_Blight", "Turmeric_Leaf_Spot", "Turmeric_Healthy",
-    "Sugarcane_Red_Rot", "Sugarcane_Smut", "Sugarcane_Healthy",
-    "Tomato_Late_Blight", "Tomato_Early_Blight", "Tomato_Leaf_Curl", "Tomato_Healthy",
-    "Papaya_Ring_Spot", "Papaya_Mosaic", "Papaya_Healthy",
-    "Mango_Anthracnose", "Mango_Powdery_Mildew", "Mango_Sooty_Mold", "Mango_Healthy",
-    "Banana_Panama_Disease", "Banana_Sigatoka", "Banana_Healthy",
-    "PigeonPea_Sterility_Mosaic", "PigeonPea_Phytophthora_Blight", "PigeonPea_Healthy",
-    "Sunflower_Rust", "Sunflower_Downy_Mildew", "Sunflower_Healthy",
-    "Jowar_Anthracnose", "Jowar_Grain_Mold", "Jowar_Healthy",
-    "Millet_Blast", "Millet_Downy_Mildew", "Millet_Healthy"
+"Rice_Bacterial_Blight","Rice_Blast","Rice_Tungro","Rice_Healthy",
+"Cotton_Bacterial_Blight","Cotton_Leaf_Curl","Cotton_Wilt","Cotton_Healthy",
+"Chili_Leaf_Curl","Chili_Anthracnose","Chili_Bacterial_Spot","Chili_Healthy",
+"Maize_Gray_Leaf_Spot","Maize_Leaf_Blight","Maize_Common_Rust","Maize_Healthy",
+"Groundnut_Leaf_Spot","Groundnut_Rust","Groundnut_Healthy",
+"Turmeric_Leaf_Blight","Turmeric_Leaf_Spot","Turmeric_Healthy",
+"Sugarcane_Red_Rot","Sugarcane_Smut","Sugarcane_Healthy",
+"Tomato_Late_Blight","Tomato_Early_Blight","Tomato_Leaf_Curl","Tomato_Healthy",
+"Papaya_Ring_Spot","Papaya_Mosaic","Papaya_Healthy",
+"Mango_Anthracnose","Mango_Powdery_Mildew","Mango_Sooty_Mold","Mango_Healthy",
+"Banana_Panama_Disease","Banana_Sigatoka","Banana_Healthy",
+"PigeonPea_Sterility_Mosaic","PigeonPea_Phytophthora_Blight","PigeonPea_Healthy",
+"Sunflower_Rust","Sunflower_Downy_Mildew","Sunflower_Healthy",
+"Jowar_Anthracnose","Jowar_Grain_Mold","Jowar_Healthy",
+"Millet_Blast","Millet_Downy_Mildew","Millet_Healthy"
 ]
 
+
 preventive_methods = {
-    "Rice_Bacterial_Blight": "Use resistant varieties, avoid high nitrogen, keep fields drained.",
+"Mango_Anthracnose":"Apply copper-based fungicides and prune affected twigs.",
+"Mango_Powdery_Mildew":"Spray sulfur fungicides and reduce humidity.",
+"Mango_Sooty_Mold":"Control mealybugs and whiteflies.",
+"Mango_Healthy":"Healthy mango tree."
+
+"Rice_Bacterial_Blight": "Use resistant varieties, avoid high nitrogen, keep fields drained.",
     "Rice_Blast": "Use fungicide sprays, maintain field sanitation.",
     "Rice_Tungro": "Control leafhopper insects, remove infected plants.",
     "Rice_Healthy": "The crop is healthy. Maintain good fertilizer and irrigation practices.",
@@ -113,7 +121,8 @@ preventive_methods = {
     "Millet_Blast": "Use resistant varieties and maintain field sanitation.",
     "Millet_Downy_Mildew": "Use disease-free seeds and avoid high moisture.",
     "Millet_Healthy": "Healthy millet crop."
-}  
+}
+
 
 def compare_with_dataset(image_path):
 
@@ -139,10 +148,11 @@ def predict_disease_from_filename(filename):
     filename = filename.lower()
 
     for disease in classes:
-        if disease.lower().replace('_', '') in filename.replace('_', ''):
+        if disease.lower().replace('_','') in filename.replace('_',''):
             return disease
 
     return "Unknown Disease"
+
 
 @app.route('/')
 def home():
@@ -153,12 +163,14 @@ def home():
 def predict():
 
     file = request.files['file']
-    source = request.form.get("source")   # camera or file
+    source = request.form.get("source")
 
     filename = secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
 
+
+    # CAMERA → compare with mango dataset
     if source == "camera":
 
         matched_file = compare_with_dataset(filepath)
@@ -166,11 +178,15 @@ def predict():
         if matched_file:
             disease = os.path.splitext(matched_file)[0]
         else:
-            disease = "Unknown Disease"
+            disease = "Unknown Mango Disease"
 
-        methods = preventive_methods.get(disease, "No preventive info available.")
+        methods = preventive_methods.get(
+            disease,
+            "No preventive information available."
+        )
 
 
+    # FILE UPLOAD → detect by filename
     else:
 
         disease = predict_disease_from_filename(filename)
@@ -179,7 +195,7 @@ def predict():
 
             if filename.lower().startswith("leaf"):
                 disease = "Healthy Plant"
-                methods = "The plant is healthy with no disease."
+                methods = "The plant is healthy."
 
             elif filename.lower().startswith("pic"):
                 disease = "Unhealthy Plant - Unknown Disease"
@@ -189,12 +205,16 @@ def predict():
                 methods = "No preventive information available."
 
         else:
-            methods = preventive_methods.get(disease, "No preventive information available.")
+            methods = "Preventive information not stored for this crop."
 
-    return render_template('result.html',
-                           disease=disease,
-                           methods=methods,
-                           img_path=filepath)
+
+    return render_template(
+        'result.html',
+        disease=disease,
+        methods=methods,
+        img_path=filepath
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
